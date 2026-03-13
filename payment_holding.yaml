@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-holding
+  labels:
+    app: payment-holding
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-holding
+  template:
+    metadata:
+      labels:
+        app: payment-holding
+    spec:
+      containers:
+        - name: payment-holding
+          image: rahulraut1232/payment_holding_ms:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9092
+          env:
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: mysql-username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: mysql-password
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: payment_holding_db_url
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-holding-service
+spec:
+  ports:
+    - protocol: TCP
+      port: 9092
+      targetPort: 9092
+  selector:
+    app: payment-holding

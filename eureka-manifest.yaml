@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: eureka-service-0
+spec:
+  serviceName: eureka-service-0
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eureka-service-0
+  template:
+    metadata:
+      labels:
+        app: eureka-service-0
+    spec:
+      containers:
+        - name: eureka-service-0
+          image: rahulraut1232/eureka_service_registry:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8761
+          env:
+            - name: EUREKA_SERVER_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: eureka_service_address
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eureka-service-0
+  labels:
+    app: eureka-service-0
+spec:
+  ports:
+    - protocol: TCP
+      port: 8761
+      targetPort: 8761
+  selector:
+    app: eureka-service-0

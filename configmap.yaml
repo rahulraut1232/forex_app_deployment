@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap
+data:
+  userdb_url: jdbc:mysql://mysql-db-instance.cta8o46cuek8.eu-west-2.rds.amazonaws.com:3306/userdb
+  payment_holding_db_url: jdbc:mysql://mysql-db-instance.cta8o46cuek8.eu-west-2.rds.amazonaws.com:3306/paymentholdingdb
+  eureka_service_address: http://eureka-0.eureka-service:8761/eureka
