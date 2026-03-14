@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: forex-app-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  rules:
+      http:
+        paths:
+        - path: /holdings  # Path to match for this rule
+          pathType: Prefix  # Match all paths that start with /
+          backend:
+            service:
+              name: forex-app-service  # Name of the backend service
+              port:
+                number: 9092  # Service port to forward traffic to
+        paths:
+        - path: /user  # Path to match for this rule
+          pathType: Prefix  # Match all paths that start with /
+          backend:
+            service:
+              name: forex-app-service  # Name of the backend service
+              port:
+                number: 9093  # Service port to forward traffic to
